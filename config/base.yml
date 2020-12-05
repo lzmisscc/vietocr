@@ -1,5 +1,5 @@
 # change to list chars of your dataset or use default vietnamese chars
-vocab: 'aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ0123456789!"#$%&''()*+,-./:;<=>?@[\]^_`{|}~ '
+vocab: " "
 
 # cpu, cuda, cuda:0
 device: cuda:0
@@ -20,7 +20,7 @@ optimizer:
     pct_start: 0.1
 
 trainer:
-    batch_size: 32
+    batch_size: 8
     print_every: 200
     valid_every: 4000
     iters: 100000
@@ -35,9 +35,9 @@ dataset:
     # name of your dataset
     name: data
     # path to annotation and image
-    data_root: ./img/
-    train_annotation: annotation_train.txt
-    valid_annotation: annotation_val_small.txt
+    data_root: /
+    train_annotation: /data/lz/GitHub/vietocr/table_ocr/abs_train.txt
+    valid_annotation: /data/lz/GitHub/vietocr/table_ocr/abs_test.txt
     # resize image to 32 height, larger height will increase accuracy
     image_height: 32
     image_min_width: 32

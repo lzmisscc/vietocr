@@ -4,7 +4,7 @@ pretrain:
     cached: /tmp/tranformerorc.pth
 
 # weights: https://drive.google.com/uc?id=12dTOZ9VP7ZVzwQgVvqBWz5JO5RXXW5NY
-weights: /data/lz/GitHub/vietocr/weights/resnet_transformerocr.pth
+weights: /data/lz/GitHub/vietocr/weights/resnet_fpn_transformerocr.pth
 
 backbone: resnet50_fpn
 cnn: {}

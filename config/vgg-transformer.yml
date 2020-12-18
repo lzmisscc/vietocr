@@ -4,7 +4,8 @@ pretrain:
     cached: /tmp/tranformerorc.pth
 
 # url or local path
-weights: https://drive.google.com/uc?id=13327Y1tz1ohsm5YZMyXVMPIOjoOA0OaA
+# weights: https://drive.google.com/uc?id=13327Y1tz1ohsm5YZMyXVMPIOjoOA0OaA
+weights: /data/lz/GitHub/vietocr/weights/vgg-transformer.pth
 
 backbone: vgg19_bn
 cnn:

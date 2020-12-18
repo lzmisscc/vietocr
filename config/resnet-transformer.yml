@@ -4,7 +4,43 @@ pretrain:
     cached: /tmp/tranformerorc.pth
 
 # weights: https://drive.google.com/uc?id=12dTOZ9VP7ZVzwQgVvqBWz5JO5RXXW5NY
-weights: /data/lz/GitHub/vietocr/weights/tranformer_ocr.pth
+weights: /data/lz/GitHub/vietocr/weights/resnet-transformer.pth
+trainer:
+    batch_size: 128
+    print_every: 500
+    valid_every: 5000
+    iters: 100000
+    # where to save our model for prediction
+    export: ./weights/resnet-transformer.pth
+    # load resume from checkpoint
+    checkpoint: /data/lz/GitHub/vietocr/weights/resnet-transformer.pth
+    log: ./train.log
+    # null to disable compuate accuracy, or change to number of sample to enable validiation while training
+    metrics: 100
+
+dataset:    
+    # name of your dataset
+    name: data
+    # path to annotation and image
+    data_root: /
+    train_annotation: /data/lz/GitHub/vietocr/table_ocr/abs_train_300w.txt
+    valid_annotation: /data/lz/GitHub/vietocr/table_ocr/abs_val_10w.txt
+    # resize image to 32 height, larger height will increase accuracy
+    image_height: 32
+    image_min_width: 32
+    image_max_width: 512
+
+seq_modeling: transformer
+transformer:  
+    d_model: 256
+    nhead: 8
+    num_encoder_layers: 6
+    num_decoder_layers: 6
+    dim_feedforward: 512
+    max_seq_length: 256
+    pos_dropout: 0.1
+    trans_dropout: 0.1
+
 
 backbone: resnet50
 cnn:

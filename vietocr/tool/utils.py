@@ -69,7 +69,7 @@ def compute_accuracy(ground_truth, predictions, mode='full_sequence'):
                 prediction = predictions[index]
                 if prediction == label:
                     correct_count += 1
-            avg_accuracy = correct_count / len(ground_truth)
+            avg_accuracy = correct_count / (len(ground_truth)+1e-6)
         except ZeroDivisionError:
             if not predictions:
                 avg_accuracy = 1

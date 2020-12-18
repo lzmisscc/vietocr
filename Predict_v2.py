@@ -22,7 +22,6 @@ class ocr:
     def run(self, im: Image):
         s = self.text_r.predict(im)
         return index_decode(s)
-
 import re
 def index_decode(index_encode):
     # 解码部分
@@ -31,6 +30,7 @@ def index_decode(index_encode):
     res = re.split("(.{0,1}[卐♡♀]{0,3})", res)
     res = list(filter(lambda x: x, res))
 
+    print(res)
 
     def trans(data, split='卐', start='<b>', end='</b>'):
         res = data
@@ -60,20 +60,36 @@ def index_decode(index_encode):
                     tmp_res.append(start + tmp.replace(split, "") + end,)
             else:
                 tmp_res.append(tmp)
+        print(tmp_res)
         return tmp_res
 
     res = trans(res, '♡', '<i>', '</i>')
     res = trans(res, '卐', '<b>', '</b>')
     res = trans(res, '♀', '<strike>', '</stirke>')
 
+    # 纠错部分
+    # for index, label in enumerate(res):
+    #     if '<b>' in label and '<i>' in label:
+    #         pass
+    #     elif '</b>' in label and '</i>' in label:
+    #         pass
+    # res = ''.join(res)
+    # tmp = re.split('(<.*?>)', res)
+    # tmp = list(filter(lambda x:x, tmp))
+    # s = []
+    # while tmp:
+    #     x = tmp.pop(0)
+    #     if
 
+    print(''.join(res))
     return ''.join(res)
+
 
 
 if __name__ == '__main__':
     import os.path as osp
     ev = Ev()
-    run = ocr("config/vgg-seq2seq.yml").run
+    run = ocr("config/vgg-transformer.yml").run
     table_ocr_txt_path = "../table_ocr/filter_val.txt"
     with open(table_ocr_txt_path, "r") as f:
         gt_lines = f.readlines()
@@ -83,5 +99,5 @@ if __name__ == '__main__':
         start = time.time()
         pre = run(im)
         ev.count(value, pre)
-        print(value, pre)
         print(f"{time.time()-start:.2f}\t{ev.socre()}")
+

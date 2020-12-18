@@ -24,10 +24,10 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 import time
+import logging
 
 class Trainer():
     def __init__(self, config, pretrained=False, augmentor=ImgAugTransform()):
-
         self.config = config
         self.model, self.vocab = build_model(config)
         
@@ -47,7 +47,7 @@ class Trainer():
         self.image_aug = config['aug']['image_aug']
         self.masked_language_model = config['aug']['masked_language_model']
 
-        self.checkpoint = config['trainer']['checkpoint']
+        # self.checkpoint = config['trainer']['checkpoint']
         self.export_weights = config['trainer']['export']
         self.metrics = config['trainer']['metrics']
         logger = config['trainer']['log']
@@ -56,8 +56,9 @@ class Trainer():
             self.logger = Logger(logger) 
 
         if pretrained:
-            weight_file = download_weights(**config['pretrain'], quiet=config['quiet'])
-            self.load_weights(weight_file)
+            logging.info(f"Load weights from {config['weights']}....")
+            # weight_file = download_weights(**config['pretrain'], quiet=config['quiet'])
+            self.load_weights(config['weights'])
 
         self.iter = 0
         
@@ -82,7 +83,6 @@ class Trainer():
                     self.data_root, self.valid_annotation, masked_language_model=False)
 
         self.train_losses = []
-        
     def train(self):
         total_loss = 0
         
@@ -166,10 +166,10 @@ class Trainer():
         pred_sents = []
         actual_sents = []
         img_files = []
+        prob = None
 
         for batch in  self.valid_gen:
             batch = self.batch_to_device(batch)
-
             if self.beamsearch:
                 translated_sentence = batch_translate_beam_search(batch['img'], self.model)
                 prob = None

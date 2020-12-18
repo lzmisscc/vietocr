@@ -1,8 +1,13 @@
 from vietocr.tool.translate import build_model, translate, translate_beam_search, process_input, predict
 from vietocr.tool.utils import download_weights
-
+import numpy as np
 import torch
-
+from torchvision import transforms
+compose = transforms.Compose([
+    transforms.Resize(32),
+    transforms.Grayscale(3),
+    transforms.ToTensor()
+])
 class Predictor():
     def __init__(self, config):
 
@@ -23,8 +28,11 @@ class Predictor():
         self.vocab = vocab
         
     def predict(self, img, return_prob=False):
-        img = process_input(img, self.config['dataset']['image_height'], 
-                self.config['dataset']['image_min_width'], self.config['dataset']['image_max_width'])        
+        # img = process_input(img, self.config['dataset']['image_height'], 
+        #         self.config['dataset']['image_min_width'], self.config['dataset']['image_max_width'])        
+        img = compose(img)
+        img = torch.unsqueeze(img, 0)
+        img = torch.FloatTensor(img)
         img = img.to(self.config['device'])
 
         if self.config['predictor']['beamsearch']:

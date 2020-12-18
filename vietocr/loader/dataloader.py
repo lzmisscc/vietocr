@@ -18,6 +18,7 @@ from torch.utils.data.sampler import Sampler
 from vietocr.tool.translate import process_image
 from vietocr.tool.create_dataset import createDataset
 from vietocr.tool.translate import resize
+import logging
 
 class OCRDataset(Dataset):
     def __init__(self, lmdb_path, root_dir, annotation_path, vocab, image_height=32, image_min_width=32, image_max_width=512, transform=None):
@@ -60,12 +61,18 @@ class OCRDataset(Dataset):
                 ncols = 100, position=0, leave=True) 
 
         for i in pbar:
-            bucket = self.get_bucket(i)
+            # bucket = self.get_bucket(i)
+            bucket, label = self.get_bucket(i)
+            if len(label) >= 256 - 5:
+                continue
             self.cluster_indices[bucket].append(i)
 
     
     def get_bucket(self, idx):
         key = 'dim-%09d'%idx
+
+        label = 'label-%09d'%idx
+        label = self.txn.get(label.encode()).decode()
 
         dim_img = self.txn.get(key.encode())
         dim_img = np.fromstring(dim_img, dtype=np.int32)
@@ -73,7 +80,7 @@ class OCRDataset(Dataset):
 
         new_w, image_height = resize(imgW, imgH, self.image_height, self.image_min_width, self.image_max_width)
 
-        return new_w
+        return new_w, label
 
     def read_buffer(self, idx):
         img_file = 'image-%09d'%idx
@@ -95,28 +102,25 @@ class OCRDataset(Dataset):
         buf, label, img_path = self.read_buffer(idx) 
 
         img = Image.open(buf).convert('RGB')        
-       
+        
         if self.transform:
             img = self.transform(img)
 
         img_bw = process_image(img, self.image_height, self.image_min_width, self.image_max_width)
-            
         word = self.vocab.encode(label)
 
         return img_bw, word, img_path
 
     def __getitem__(self, idx):
         img, word, img_path = self.read_data(idx)
-        
         img_path = os.path.join(self.root_dir, img_path)
-        
         sample = {'img': img, 'word': word, 'img_path': img_path}
 
         return sample
 
     def __len__(self):
         return self.nSamples
-
+  
 class ClusterRandomSampler(Sampler):
     
     def __init__(self, data_source, batch_size, shuffle=True):

@@ -28,11 +28,11 @@ class Predictor():
         self.vocab = vocab
         
     def predict(self, img, return_prob=False):
-        # img = process_input(img, self.config['dataset']['image_height'], 
-        #         self.config['dataset']['image_min_width'], self.config['dataset']['image_max_width'])        
-        img = compose(img)
-        img = torch.unsqueeze(img, 0)
-        img = torch.FloatTensor(img)
+        img = process_input(img, self.config['dataset']['image_height'], 
+                self.config['dataset']['image_min_width'], self.config['dataset']['image_max_width'])        
+        # img = compose(img)
+        # img = torch.unsqueeze(img, 0)
+        # img = torch.FloatTensor(img)
         img = img.to(self.config['device'])
 
         if self.config['predictor']['beamsearch']:

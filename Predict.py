@@ -79,20 +79,22 @@ if __name__ == '__main__':
     from distance import levenshtein
     ev = Ev()
     fuck = ocr("config/resnet-transformer.yml")
+    # fuck = ocr("config/vgg-convseq2seq.yml")
     run = fuck.run
     table_ocr_txt_path = "../table_ocr/filter_val.txt"
     with open(table_ocr_txt_path, "r") as f:
-        gt_lines = f.readlines()[:10000]
-
+        gt_lines = f.readlines()
     gt_lines = tqdm.tqdm(gt_lines)
     log = open(f"Predict_{time.strftime('%y-%m-%d-%H')}.csv", "w")
+    result_txt = open("transformer.result", "w")
     for index, line in enumerate(gt_lines):
         name, value = line.strip("\n").split("\t")
         im = Image.open(osp.join("../table_ocr/data/val", name))
         start = time.time()
         pre = run(im)
+        result_txt.write(f"{name}\t{pre}\n")
         ev.count(value, pre)
         if value != pre:
-            log.write(f"{pre},{value},{levenshtein}\n")
+            log.write(f"{name},{pre},{value},{levenshtein}\n")
         acc = ev.socre()
         gt_lines.set_description(f"{time.time()-start:.2f},char_acc:{acc['char_acc']*100:.2f},seq_acc:{acc['seq_acc']*100:.2f},{value==pre}")

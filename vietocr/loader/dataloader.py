@@ -63,7 +63,7 @@ class OCRDataset(Dataset):
         for i in pbar:
             # bucket = self.get_bucket(i)
             bucket, label = self.get_bucket(i)
-            if len(label) >= 256 - 5:
+            if len(label) >= 512 - 5:
                 continue
             self.cluster_indices[bucket].append(i)
 

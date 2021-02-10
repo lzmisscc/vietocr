@@ -26,11 +26,13 @@ import matplotlib.pyplot as plt
 import time
 import logging
 
+import ipdb
+
 class Trainer():
     def __init__(self, config, pretrained=False, augmentor=ImgAugTransform()):
         self.config = config
         self.model, self.vocab = build_model(config)
-        
+        # ipdb.set_trace()
         self.device = config['device']
         self.num_iters = config['trainer']['iters']
         self.beamsearch = config['predictor']['beamsearch']

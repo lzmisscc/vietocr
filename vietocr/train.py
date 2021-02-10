@@ -18,7 +18,7 @@ def main():
     config = config_base
 
     config['vocab'] = character
-    trainer = Trainer(config, pretrained=True)
+    trainer = Trainer(config, pretrained=False)
 
 
     # args.checkpoint = config.trainer["checkpoint"]
